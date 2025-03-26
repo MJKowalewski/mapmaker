@@ -1,6 +1,6 @@
 Package: mapmaker
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Creates a map based on NOAA coastline data
 Version: 0.1.0
 Depends: R (>= 4.0.0)
 Authors@R: c(

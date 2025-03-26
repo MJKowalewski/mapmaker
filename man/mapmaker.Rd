@@ -4,7 +4,7 @@
 \name{mapmaker}
 \alias{mapmaker-package}
 \alias{mapmaker}
-\title{mapmaker: What the Package Does (Title Case)}
+\title{mapmaker: Creates a map based on NOAA coastline data}
 \usage{
 mapmaker(
   coords,

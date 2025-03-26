@@ -7,8 +7,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# Package Mapmaker
-
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -16,18 +14,53 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(mapmaker)
-```
+## Package Mapmaker
 
-The package mapmaker include a single function designed to create maps from dataframes derived from NOAA coastline datasets that can be downloaded in .bna format from 
+The package mapmaker includes a single function designed to create maps from dataframes derived from NOAA coastline datasets that can be downloaded in .bna format from 
 https://gnome.orr.noaa.gov/goods/tools/GSHHS/coast_subset
 
 The .bna file can be uploded using read.delim function:
 read.delim('filename.bna', sep=',', header=TRUE)
+The package can be installed from github in R:
+<br>
+devtools::install_github('mjkowalewski/mapmaker', build_vignettes = TRUE)
+<br>
+Once installed, the library can be accessed.
 
-The function *mapmaker* will create a map from the dataframe.
 
-```{r creating map}
+```{r setup}
+library(mapmaker)
+```
+
+The function *mapmaker* will create a map from the dataframe. Here, an example dataset ("bahamas") included in the package is used to generate the map.
+
+Create a preview of the map using default settings.
+
+```{r creating a map, echo=TRUE}
 mapmaker(bahamas)
 ```
+
+You can then customize the map by changing colors and modifying the placement of scale bar or north arrow. Both, scale bar and north arrow can be suppressed. Check help menu  (?mapmaker)
+
+```{r a map with arguments, echo=TRUE}
+mapmaker(bahamas, scale.width = 50, scale.lwd = 1.5,
+         scale.lat=27, scale.long=-76, arr.lwd = 1.5, arr.cex = 0.8, arr.coord = c(-73, 26.5, 27.5), sea.col='turquoise', land.col='yellow', coast.col = 'gray50')
+```
+
+
+You can add additional elements to the map such as towns or sampling sites using 'rscript' argument.The package provides example datasets ('bahamas.towns' and 'bahamas.sites') used in the example below. Here, coordinates and labels are added for towns and sites.
+
+```{r map customizing, echo=TRUE}
+mapmaker(bahamas, scale.width = 50, scale.lwd = 1.5,
+         scale.lat=27, scale.long=-76, arr.lwd = 1.5, arr.cex = 0.8, arr.coord = c(-73, 26.5, 27.5), rscript={
+  mtext(side=3, line=0.1, "my map")
+  points(bahamas.towns[,2:3], pch=24, cex=0.6, col='black', bg='blue')
+  text(bahamas.towns[,2:3], cex=0.5, col='blue', bahamas.towns[,1],
+       pos = 2, offset=0.15)
+  points(bahamas.sites[,2:3], pch=21, cex=1.3, col='black', bg='white')
+  text(bahamas.sites[,2:3], cex=0.6, col='black', bahamas.sites[,1])
+})
+```
+<br>
+
+Once the map is finalized, set pdf = TRUE to export the map as a PDF file.
