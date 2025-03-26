@@ -1,0 +1,33 @@
+---
+title: "mapmaker"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{mapmaker}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Package Mapmaker
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(mapmaker)
+```
+
+The package mapmaker include a single function designed to create maps from dataframes derived from NOAA coastline datasets that can be downloaded in .bna format from 
+https://gnome.orr.noaa.gov/goods/tools/GSHHS/coast_subset
+
+The .bna file can be uploded using read.delim function:
+read.delim('filename.bna', sep=',', header=TRUE)
+
+The function *mapmaker* will create a map from the dataframe.
+
+```{r creating map}
+mapmaker(bahamas)
+```

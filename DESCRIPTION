@@ -2,15 +2,20 @@ Package: mapmaker
 Type: Package
 Title: What the Package Does (Title Case)
 Version: 0.1.0
+Depends: R (>= 4.0.0)
 Authors@R: c(
     person(
-      "Jane", "Doe",
-      email = "jane@example.com",
+      "Michal", "Kowalewski",
+      email = "kowalewski@ufl.edu",
       role = c("aut", "cre")
     )
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
-License: What license is it under?
+Description: Package "mapmaker" creates PDF-formatted maps using NOAA data.
+License: CC0
 Encoding: UTF-8
 LazyData: true
+URL: https://github.com/mjkowalewski/mapmaker
+BugReports: https://github.com/mjkowalewski/mapmaker
+RoxygenNote: 7.3.2
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
