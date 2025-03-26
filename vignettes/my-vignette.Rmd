@@ -14,43 +14,45 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Package Mapmaker
-
-The package mapmaker includes a single function designed to create maps from dataframes derived from NOAA coastline datasets that can be downloaded in .bna format from 
+The package mapmaker includes a single function ('mapmaker') designed to create maps from dataframes derived from NOAA coastline datasets that can be downloaded in .bna format from 
 https://gnome.orr.noaa.gov/goods/tools/GSHHS/coast_subset
 
 The .bna file can be uploded using read.delim function:
-read.delim('filename.bna', sep=',', header=TRUE)
+<br>
+read.delim(`"`filename.bna`"`, sep=`"`,`"`, header=TRUE)
+<br>
 The package can be installed from github in R:
 <br>
-devtools::install_github('mjkowalewski/mapmaker', build_vignettes = TRUE)
+devtools::install_github(`"`mjkowalewski/mapmaker`"`, build_vignettes = TRUE)
 <br>
-Once installed, the library can be accessed.
+Once installed, upload the library.
 
 
 ```{r setup}
 library(mapmaker)
 ```
 
-The function *mapmaker* will create a map from the dataframe. Here, an example dataset ("bahamas") included in the package is used to generate the map.
+The function *mapmaker* will create a map. In its default setting (pdf = FALSE), the function will plot the map locally in R plot window. This is for preview only. The aspect ratio of R plot will not be correct, depending on plot window dimensions and longitude and latitude range of the map. Once the plot is finalized (see examples below), set pdf = TRUE to generate a PDF file, which will be placed in the working directory of the current R session (check your directory using getwd()).
+<br>
+Below, an example map is generated using the dataset "bahamas", which is included in the package.
 
-Create a preview of the map using default settings.
-
-```{r creating a map, echo=TRUE}
+```{r creating a map, echo=TRUE, fig.dim = c(6, 6), fig.align='center'}
 mapmaker(bahamas)
 ```
 
-You can then customize the map by changing colors and modifying the placement of scale bar or north arrow. Both, scale bar and north arrow can be suppressed. Check help menu  (?mapmaker)
+The map can be customized by changing colors and modifying the placement of scale bar or north arrow. Both, scale bar and north arrow can be suppressed. See help menu ?mapmaker for details about all available arguments.
+<br>
+An example of map with some of the function arguments defind by the user is provided below.
 
-```{r a map with arguments, echo=TRUE}
+```{r a map with arguments, echo=TRUE, fig.dim = c(6, 6), fig.align='center'}
 mapmaker(bahamas, scale.width = 50, scale.lwd = 1.5,
          scale.lat=27, scale.long=-76, arr.lwd = 1.5, arr.cex = 0.8, arr.coord = c(-73, 26.5, 27.5), sea.col='turquoise', land.col='yellow', coast.col = 'gray50')
 ```
 
 
-You can add additional elements to the map such as towns or sampling sites using 'rscript' argument.The package provides example datasets ('bahamas.towns' and 'bahamas.sites') used in the example below. Here, coordinates and labels are added for towns and sites.
+You can add additional elements to the map such as towns or sampling sites using 'rscript={}' argument.The package provides example data sets ('bahamas.towns' and 'bahamas.sites'), which are used in the example below to add towns and sites to the map.
 
-```{r map customizing, echo=TRUE}
+```{r map customizing, echo=TRUE, fig.dim = c(6, 6), fig.align='center'}
 mapmaker(bahamas, scale.width = 50, scale.lwd = 1.5,
          scale.lat=27, scale.long=-76, arr.lwd = 1.5, arr.cex = 0.8, arr.coord = c(-73, 26.5, 27.5), rscript={
   mtext(side=3, line=0.1, "my map")
