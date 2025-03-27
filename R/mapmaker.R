@@ -1,27 +1,36 @@
 #' mapmaker
 #'
-#' Returns a map with coordinates sourced from NOAA ".bna" data file
+#' Draw Maps using GSHHS-NOAA Data
 #'
-#' Generates a map based on .bna file downloaded from:
-#' https://gnome.orr.noaa.gov/goods/tools/GSHHS/coast_subset.
-#' A NOAA file can be uploaded using: read.delim('filename.bna', sep=',', header=TRUE)
-#' If argument pdf = TRUE, a PDF file is generated with aspect ratios
-#' based on mid-point latitude of the map.
-#' A map will have a resolution given by the .bna file downloaded
-#' by the user. For maps crossing the dateline longitude west
-#' values are > 180. The map is always produced in the
-#' northward orientation. Map aspect ratio is scaled only
-#' for pdf outputs (pdf = TRUE) and local R plots (pdf = FALSE)
-#' should be used for preview only. Map width < map height and
-#' the difference in dimensions (aspect ratio)
-#' increases with latitude.
+#' Generates a map using GSHHS-NOAA data that can be downloaded at
+#' \url{https://gnome.orr.noaa.gov/goods/tools/GSHHS/coast_subset}.
+#' The data download as .bna files (Atlas Boundary Files) with
+#' shoreline coordinates defined as hierarchically arranged closed polygons.
 #'
-#' @param coords a data.frame or matrix (ncol = 3) with geographic
-#'  coordinates based on a NOAA .bna file. The file
-#' @param pdf logical (default = FALSE), determines if map is
-#' plotted locally or saved as pdf file
-#' @param filename  character string (default = 'mymap.pdf')
-#' defining name of the pdf file (ignored when pdf = FALSE)
+#'
+#' Data need to be uploaded into an R data.frame to create an object
+#' acceptable by the mapmaker function.
+#'
+#'
+#' object <- read.delim('filename.bna', sep=',', header=TRUE)
+#'
+#'
+#' The resolution of a map drawn by mapmaker will depend on
+#' the resolution chosen when downloading the .bna file from NOAA website.
+#' For maps crossing the dateline longitude west values are > 180.
+#' The map is always produced in the northward orientation.
+#' The function computes map aspect ratio based on the mid-point
+#' latitude of a given map. The aspect ratio only applies to pdf-formatted
+#' figures produced by mapmaker function when argument pdf = TRUE.
+#' The scaling is not applied When the map is previewed in R plot window
+#' (pdf = FALSE).
+#'
+#' @param coords a data.frame or matrix (ncol = 3) based on a
+#' GSHHS-NOAA .bna file. The file
+#' @param pdf logical (default = FALSE), if map is saved to an
+#' external pdf file or plotted locally
+#' @param filename character string (default = 'mymap.pdf')
+#' defining the name of the pdf output file (ignored when pdf = FALSE)
 #' @param map.height numerical value (default = 5) defining
 #' the height of the map in inches (ignored if pdf = FALSE)
 #' @param scale.bar logical (default = TRUE), determines if
@@ -41,15 +50,15 @@
 #' of 'N' symbol of N arrow
 #' @param arr.coord numerical vector (lenght=3) (default = NULL)
 #' defining N arrow location (long, start lat, end lat)
-#' @param sea.col color (default = 'lightskyblue1') for sea
-#' @param coast.col color (default = 'khaki3') for coastline
-#' @param land.col color name (default = 'khaki1') for land
-#' @param grayscale logical (default = FALSE) overrides
-#' all color definitions to plot gray-scale map
+#' @param sea.col the color used for sea areas (default = 'lightskyblue1')
+#' @param coast.col the color used for coastline (default = 'khaki3')
+#' @param land.col the color used for land areas (default = 'khaki1')
+#' @param grayscale logical (default = FALSE), if the grayscale map
+#'  should be drawn (overrides other color definitions)
 #' @param rscript R script (default = NULL) with additional
 #' plot statements (e.g., mtext(), points(), etc.)
 #'
-#' @return a plot (map)
+#' @return either a plot (pdf = FALSE) or a pdf file (pdf = TRUE)
 #'
 #' @importFrom grDevices dev.off
 #' @importFrom graphics par

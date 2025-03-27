@@ -1,6 +1,6 @@
 Package: mapmaker
 Type: Package
-Title: Creates a map based on NOAA coastline data
+Title: Map Plotter for Coastlines
 Version: 0.1.0
 Depends: R (>= 4.0.0)
 Authors@R: c(
@@ -10,7 +10,7 @@ Authors@R: c(
       role = c("aut", "cre")
     )
   )
-Description: Package "mapmaker" creates PDF-formatted maps using NOAA data.
+Description: Creates maps using GSHHS-NOAA data.
 License: CC0
 Encoding: UTF-8
 LazyData: true

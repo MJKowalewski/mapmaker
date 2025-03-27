@@ -6,7 +6,7 @@
 \format{A dataframe.
 \describe{a dataframe (ncol=3) with longitude and latitude coordinates}
 }
-\details{A dataframe with longitude and latitude coordinates for Bahamas}
-\references{none so far}
+\details{A dataframe with longitude and latitude coordinates for
+the Commonwealth of Bahamas}
 \keyword{datasets}
 \examples{str(bahamas)}
