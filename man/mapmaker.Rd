@@ -9,6 +9,7 @@ mapmaker(
   pdf = FALSE,
   filename = "mymap.pdf",
   map.height = 5,
+  lakes = FALSE,
   scale.bar = TRUE,
   scale.width = NULL,
   scale.lwd = 1.5,
@@ -21,6 +22,7 @@ mapmaker(
   sea.col = "lightskyblue1",
   coast.col = "khaki3",
   land.col = "khaki1",
+  lake.col = "seagreen1",
   grayscale = FALSE,
   rscript = NULL
 )
@@ -37,6 +39,10 @@ defining the name of the pdf output file (ignored when pdf = FALSE)}
 
 \item{map.height}{numerical value (default = 5) defining
 the height of the map in inches (ignored if pdf = FALSE)}
+
+\item{lakes}{logical (default = FALSE), plot inland water
+bodies (lakes, etc.) with a distinct color (WARNING: will
+slow down the function for large files)}
 
 \item{scale.bar}{logical (default = TRUE), determines if
 the scale bar is plotted}
@@ -69,6 +75,9 @@ defining N arrow location (long, start lat, end lat)}
 \item{coast.col}{the color used for coastline (default = 'khaki3')}
 
 \item{land.col}{the color used for land areas (default = 'khaki1')}
+
+\item{lake.col}{the color used for lakes (default = 'seagreen1')
+(ignored if lakes = FALSE)}
 
 \item{grayscale}{logical (default = FALSE), if the grayscale map
 should be drawn (overrides other color definitions)}

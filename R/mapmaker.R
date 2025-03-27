@@ -33,6 +33,9 @@
 #' defining the name of the pdf output file (ignored when pdf = FALSE)
 #' @param map.height numerical value (default = 5) defining
 #' the height of the map in inches (ignored if pdf = FALSE)
+#' @param lakes logical (default = FALSE), plot inland water
+#' bodies (lakes, etc.) with a distinct color (WARNING: will
+#' slow down the function for large files)
 #' @param scale.bar logical (default = TRUE), determines if
 #' the scale bar is plotted
 #' @param scale.width numerical value (default = NULL),
@@ -53,6 +56,8 @@
 #' @param sea.col the color used for sea areas (default = 'lightskyblue1')
 #' @param coast.col the color used for coastline (default = 'khaki3')
 #' @param land.col the color used for land areas (default = 'khaki1')
+#' @param lake.col the color used for lakes (default = 'seagreen1')
+#' (ignored if lakes = FALSE)
 #' @param grayscale logical (default = FALSE), if the grayscale map
 #'  should be drawn (overrides other color definitions)
 #' @param rscript R script (default = NULL) with additional
@@ -69,11 +74,13 @@
 #' @export
 
 mapmaker <- function(coords, pdf = FALSE, filename='mymap.pdf',
-                     map.height = 5, scale.bar = TRUE,
-                     scale.width = NULL, scale.lwd = 1.5, scale.lat = NULL,
-                     scale.long = NULL, arr.north=TRUE, arr.lwd = 1.5,
-                     arr.cex=0.8, arr.coord = NULL, sea.col = 'lightskyblue1',
-                     coast.col = 'khaki3', land.col = 'khaki1',
+                     map.height = 5, lakes = FALSE,
+                     scale.bar = TRUE, scale.width = NULL,
+                     scale.lwd = 1.5, scale.lat = NULL,
+                     scale.long = NULL, arr.north=TRUE,
+                     arr.lwd = 1.5, arr.cex=0.8, arr.coord = NULL,
+                     sea.col = 'lightskyblue1', coast.col = 'khaki3',
+                     land.col = 'khaki1', lake.col = 'seagreen1',
                      grayscale = FALSE, rscript = NULL) {
 
   if (!(is.data.frame(coords) | is.matrix(coords)))
@@ -91,6 +98,27 @@ mapmaker <- function(coords, pdf = FALSE, filename='mymap.pdf',
   long.rng <- diff(range(coords[1:4, 1])) # longitude range
   lat.rng <- diff(range(coords[1:4, 2])) # latitude range
   mapdim <- long.rng / lat.rng # map dimension ratio
+
+  if (lakes) {
+    pol.rng <- NULL
+    for (i in 1:(length(plgs)-1)) {
+      ipol <- as.vector(apply(coords[(plgs[i] + 1):(plgs[i+1] - 1),], 2, range))
+      pol.rng <- rbind(pol.rng, ipol)
+    }
+    out2 <- NULL
+    for (i in 1:(length(plgs)-1)) {
+      out1 <- 0
+      apol <- colMeans(coords[(plgs[i] + 1):(plgs[i+1] - 1),])
+      for (j in 1:(length(plgs)-1)) {
+        if (j != i) {
+          longT <- apol[1] < pol.rng[j,2] & apol[1] > pol.rng[j,1]
+          latT <- apol[2] < pol.rng[j,4] & apol[2] > pol.rng[j,3]
+          if (longT & latT) out1 <- out1 + 1
+        }
+      }
+      out2 <- rbind(out2, cbind(i, out1))
+    }
+  }
 
   if (grayscale) {
     sea.col <- 'white'; coast.col <- 'gray75'; land.col <- 'gray85'
@@ -114,7 +142,7 @@ mapmaker <- function(coords, pdf = FALSE, filename='mymap.pdf',
     }
     if (length(scale.long) + length(scale.lat) < 2) {
       scale.lat <- max(coords[1:4, 2]) - 0.06 * lat.rng
-      scale.long <- max(coords[1:4, 1]) - 0.15 * lat.rng
+      scale.long <- max(coords[1:4, 1]) - 0.5 * lat.rng
       bar.l <- scale.width / (111.3 * cos((pi/180) * scale.lat)) # bar length in degrees longitude
       bar.coords <- cbind(c(scale.long, scale.long + bar.l),
                           rep(scale.lat, 2)) # scale bar coordinates
@@ -124,8 +152,8 @@ mapmaker <- function(coords, pdf = FALSE, filename='mymap.pdf',
   if (arr.north) {
     if (length(arr.coord) == 0) {
       arr.x <- max(coords[1:4, 1]) - 0.03*long.rng
-      arr.y1 <- max(coords[1:4, 2]) - 0.2*lat.rng
-      arr.y2 <- max(coords[1:4, 2]) - 0.08*lat.rng
+      arr.y1 <- max(coords[1:4, 2]) - 0.15*lat.rng
+      arr.y2 <- max(coords[1:4, 2]) - 0.02*lat.rng
       arr.coord <- c(arr.x, arr.y1, arr.y2)
     }
   }
@@ -141,7 +169,20 @@ mapmaker <- function(coords, pdf = FALSE, filename='mymap.pdf',
     if (i < length(plgs)) {
       a1 <- plgs[i] + 1
       a2 <- plgs[i+1] - 1
-      graphics::polygon(coords[a1:a2, ], col = land.col, border = coast.col, lwd=0.3)
+      if (!lakes) graphics::polygon(coords[a1:a2, ],
+                                   col = land.col,
+                                   border = coast.col,
+                                   lwd=0.3)
+      if (lakes) {
+      if (out2[i,2] == 0) graphics::polygon(coords[a1:a2, ],
+                                    col = land.col,
+                                    border = coast.col,
+                                    lwd=0.3)
+      if (out2[i,2] > 0) graphics::polygon(coords[a1:a2, ],
+                                                    col = lake.col,
+                                                    border = coast.col,
+                                                    lwd=0.3)
+      }
     }
   }
   graphics::rect(coords[1,1], coords[1,2], coords[3,1], coords[2,2]) # add border
