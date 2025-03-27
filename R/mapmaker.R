@@ -26,7 +26,7 @@
 #' (pdf = FALSE).
 #'
 #' @param coords a data.frame or matrix (ncol = 3) based on a
-#' GSHHS-NOAA .bna file. The file
+#' GSHHS-NOAA .bna file
 #' @param pdf logical (default = FALSE), if map is saved to an
 #' external pdf file or plotted locally
 #' @param filename character string (default = 'mymap.pdf')
@@ -130,10 +130,12 @@ mapmaker <- function(coords, pdf = FALSE, filename='mymap.pdf',
     }
   }
 
-  if (pdf) pdf(filename, width=map.height*mapdim*mapratio, height=map.height) # scale plot height using map ratio
-
-  graphics::par(oma = c(0, 0, 0, 0), mar = c(3, 3, 1, 1)) # define figure margins
-  graphics::plot(coords[1:4,], type = 'n', xlab = '', ylab = '', axes = F)
+  if (pdf) pdf(filename, width=map.height*mapdim*(1/mapratio),
+               height=map.height) # scale plot height using map ratio
+  graphics::par(oma = c(0, 0, 0, 0),
+                mar = c(3, 3, 1, 1)) # define figure margins
+  graphics::plot(coords[1:4,], type = 'n',
+                 xlab = '', ylab = '', axes = F,)
   graphics::polygon(coords[1:4,], col = sea.col, border = NA)
   for (i in 1:length(plgs)) {
     if (i < length(plgs)) {

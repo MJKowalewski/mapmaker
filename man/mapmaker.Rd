@@ -27,7 +27,7 @@ mapmaker(
 }
 \arguments{
 \item{coords}{a data.frame or matrix (ncol = 3) based on a
-GSHHS-NOAA .bna file. The file}
+GSHHS-NOAA .bna file}
 
 \item{pdf}{logical (default = FALSE), if map is saved to an
 external pdf file or plotted locally}
