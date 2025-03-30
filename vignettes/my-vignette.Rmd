@@ -109,10 +109,15 @@ mapmaker(bahamas, scale.width = 50, scale.lwd = 1.5,
 ```
 <br>
 
-If the map crosses the dateline, the longitude West values are positive > 180 rather than negative (-180 - 0)
+If the map crosses the dateline, the longitude West values are positive > 180 rather than negative (-180 - 0). Also, if the region is at high latitudes, custom dimensions can be defined to stretch longitudes. The dimensions will not retail correct aspect ratio.
 ```{r creating a map (bearing strait), echo=TRUE, fig.dim = c(5, 5), fig.align='center'}
 mapmaker(bearing.straits)
 ```
+
+Also, if the region is at high latitudes, custom dimensions can be defined to stretch longitudes using custom.dim argument (e.g., try mapmaker(bearing.straits, pdf = TRUE, custom.dim = c(6,5)) for the Bearing Straits map.
+
+<br>
+
 Once the map is finalized, the map can be exported by setting the pdf = TRUE.
 
 <br>
