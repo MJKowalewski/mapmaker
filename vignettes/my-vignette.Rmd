@@ -94,6 +94,7 @@ Additional elements can be added to the map such as towns or sampling sites usin
 mapmaker(bahamas, scale.width = 50, scale.lwd = 1.5,
          scale.lat=27, scale.long=-76, arr.lwd = 1.5, 
          arr.cex = 0.8, arr.coord = c(-73, 26.5, 27.5), 
+         grayscale = TRUE,
          rscript={
            mtext(side=3, line=0.1, "my map")
            points(bahamas.towns[,2:3], pch=24, cex=0.7,
@@ -109,12 +110,13 @@ mapmaker(bahamas, scale.width = 50, scale.lwd = 1.5,
 ```
 <br>
 
-If the map crosses the dateline, the longitude West values are positive > 180 rather than negative (-180 - 0). Also, if the region is at high latitudes, custom dimensions can be defined to stretch longitudes. The dimensions will not retail correct aspect ratio.
+If the map crosses the dateline, the longitude West values are positive > 180 rather than negative (-180 - 0).
+
 ```{r creating a map (bearing strait), echo=TRUE, fig.dim = c(5, 5), fig.align='center'}
 mapmaker(bearing.straits)
 ```
 
-Also, if the region is at high latitudes, custom dimensions can be defined to stretch longitudes using custom.dim argument (e.g., try mapmaker(bearing.straits, pdf = TRUE, custom.dim = c(6,5)) for the Bearing Straits map.
+Also, custom dimensions can be defined to customize map aspect ratio (e.g., mapmaker(bearing.straits, pdf = TRUE, custom.dim = c(6,5)).
 
 <br>
 
@@ -132,7 +134,7 @@ Once the map is finalized, the map can be exported by setting the pdf = TRUE.
   
   * The function computes map aspect ratio based on the mid-point latitude of a given map. The aspect ratio only applies to pdf-formatted figures produced by mapmaker function when argument pdf = TRUE.
   
-  * The scaling is not applied When the map is previewed in R plot window (pdf = FALSE).
+  * The scaling is not applied when the map is previewed in R plot window (pdf = FALSE).
 
 <br>
 

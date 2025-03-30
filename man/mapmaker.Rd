@@ -40,11 +40,9 @@ file (default = 'mymap.pdf'). Ignored when pdf = FALSE)}
 \item{map.height}{numerical value defining the height of the map
 in inches (default = 5). Ignored when pdf = FALSE}
 
-\item{custom.dim}{vector with two values defining map dimensions
-(default = NULL). For maps of high-latitude regions, it may be desirable
-to plot a map with incorrect aspect ratios (e.g, c(5,5)). If custom.dim
-values are provided, the dimensions will be custom-defined by the user and
-the map aspect ratio will be distorted.}
+\item{custom.dim}{vector with two values defining map
+dimensions (width and height) (default = NULL). If custom.dim
+is provided, the map aspect ratio will be distorted.}
 
 \item{scale.bar}{logical (default = TRUE), determines if
 the scale bar is plotted. If scale.bar = FALSE,

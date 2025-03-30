@@ -33,11 +33,9 @@
 #' file (default = 'mymap.pdf'). Ignored when pdf = FALSE)
 #' @param map.height numerical value defining the height of the map
 #' in inches (default = 5). Ignored when pdf = FALSE
-#' @param custom.dim vector with two values defining map dimensions
-#' (default = NULL). For maps of high-latitude regions, it may be desirable
-#' to plot a map with incorrect aspect ratios (e.g, c(5,5)). If custom.dim
-#' values are provided, the dimensions will be custom-defined by the user and
-#' the map aspect ratio will be distorted.
+#' @param custom.dim vector with two values defining map
+#' dimensions (width and height) (default = NULL). If custom.dim
+#' is provided, the map aspect ratio will be distorted.
 #' @param scale.bar logical (default = TRUE), determines if
 #' the scale bar is plotted. If scale.bar = FALSE,
 #' all scale parameters are ignored
@@ -141,10 +139,13 @@ mapmaker <- function(coords, pdf = FALSE, filename='mymap.pdf',
   }
 
   # create a pdf using correct map aspect ratio
-  if (pdf & length(custom.dim) == 0) pdf(filename, width=map.height*mapdim*(1/mapratio),
-               height=map.height)
+  if (pdf & length(custom.dim) == 0) pdf(filename,
+                                         width=map.height*mapdim*mapratio,
+                                         height=map.height)
+
   # create a pdf  using custom dimensions
-  if (pdf & length(custom.dim) == 2) pdf(filename, width=custom.dim[1],
+  if (pdf & length(custom.dim) == 2) pdf(filename,
+                                         width=custom.dim[1],
                                          height=custom.dim[2])
 
   graphics::par(oma = c(0, 0, 0, 0),
