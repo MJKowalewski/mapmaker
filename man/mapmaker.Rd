@@ -9,7 +9,6 @@ mapmaker(
   pdf = FALSE,
   filename = "mymap.pdf",
   map.height = 5,
-  lakes = FALSE,
   scale.bar = TRUE,
   scale.width = NULL,
   scale.lwd = 1.5,
@@ -22,8 +21,8 @@ mapmaker(
   sea.col = "lightskyblue1",
   coast.col = "khaki3",
   land.col = "khaki1",
-  lake.col = "seagreen1",
   grayscale = FALSE,
+  transp = 0.5,
   rscript = NULL
 )
 }
@@ -31,44 +30,42 @@ mapmaker(
 \item{coords}{a data.frame or matrix (ncol = 3) based on a
 GSHHS-NOAA .bna file}
 
-\item{pdf}{logical (default = FALSE), if map is saved to an
-external pdf file or plotted locally}
+\item{pdf}{logical, determines if map is saved to an
+external pdf file or plotted locally (default = FALSE)}
 
-\item{filename}{character string (default = 'mymap.pdf')
-defining the name of the pdf output file (ignored when pdf = FALSE)}
+\item{filename}{character string defining the name of the pdf
+file (default = 'mymap.pdf'). Ignored when pdf = FALSE)}
 
-\item{map.height}{numerical value (default = 5) defining
-the height of the map in inches (ignored if pdf = FALSE)}
-
-\item{lakes}{logical (default = FALSE), plot inland water
-bodies (lakes, etc.) with a distinct color (WARNING: will
-slow down the function for large files)}
+\item{map.height}{numerical value defining the height of the map
+in inches (default = 5). Ignored when pdf = FALSE}
 
 \item{scale.bar}{logical (default = TRUE), determines if
-the scale bar is plotted}
+the scale bar is plotted. If scale.bar = FALSE,
+all scale parameters are ignored}
 
-\item{scale.width}{numerical value (default = NULL),
-the length of the scale bar (km)}
+\item{scale.width}{numerical value, the length of the scale bar
+in kilometers (default = NULL)}
 
-\item{scale.lwd}{numerical (default = 1.5), thickness of the
-scale bar line}
+\item{scale.lwd}{numerical value, the scale bar line
+thickness (default = 1.5)}
 
-\item{scale.lat}{numerical (default = NULL), latitude of the
-scale bar (ignored if scale.long is not provided)}
+\item{scale.lat}{numerical value, latitude of the scale bar
+(default = NULL). Ignored if scale.long not provided}
 
-\item{scale.long}{numerical (default = NULL), west longitude
-of the scale bar (ignored if scale.long is not provided)}
+\item{scale.long}{numerical value, west longitude endpoint
+of the scale bar (default = NULL). Ignored if scale.lat not provided.}
 
-\item{arr.north}{logical (default = TRUE), indicates
-if N arrow should be plotted}
+\item{arr.north}{logical, indicates if N arrow is plotted (default = TRUE).
+When arr.north = FALSE all arrow parameters are ignored.}
 
-\item{arr.lwd}{numerical (default = 1.5), thickness of N arrow}
+\item{arr.lwd}{numerical value, thickness of N arrow (default = 1.5)}
 
-\item{arr.cex}{numerical (default = 0.8), the font size
-of 'N' symbol of N arrow}
+\item{arr.cex}{numerical value, the font size of 'N' symbol
+(default = 0.8)}
 
-\item{arr.coord}{numerical vector (lenght=3) (default = NULL)
-defining N arrow location (long, start lat, end lat)}
+\item{arr.coord}{numerical vector with three values defining
+N arrow location (long, start lat, end lat) (default = NULL).
+If not provided, N arrow is plotted in the upper right corner of the map.}
 
 \item{sea.col}{the color used for sea areas (default = 'lightskyblue1')}
 
@@ -76,11 +73,10 @@ defining N arrow location (long, start lat, end lat)}
 
 \item{land.col}{the color used for land areas (default = 'khaki1')}
 
-\item{lake.col}{the color used for lakes (default = 'seagreen1')
-(ignored if lakes = FALSE)}
-
 \item{grayscale}{logical (default = FALSE), if the grayscale map
 should be drawn (overrides other color definitions)}
+
+\item{transp}{numerical value for land color transparency (default = 0.5)}
 
 \item{rscript}{R script (default = NULL) with additional
 plot statements (e.g., mtext(), points(), etc.)}

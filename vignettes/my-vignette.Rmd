@@ -63,9 +63,14 @@ str(bahamas)
 head(bahamas)
 ```
 
+Here is an example of a map produced by the function for the dataset "adriatic" using the function's default settings.The pdf version of this figure offers much higher quality and resolution than the figure in the html version rendered here.  
+```{r creating a map (adriatic), echo=TRUE, fig.dim = c(5, 5), fig.align='center'}
+mapmaker(adriatic)
+```
+
 Here is an example of a map produced by the function for the dataset "bahamas" using the function's default settings.The pdf version of this figure offers much higher quality and resolution than the figure in the html version rendered here.  
 
-```{r creating a map, echo=TRUE, fig.dim = c(5, 5), fig.align='center'}
+```{r creating a map (bahamas), echo=TRUE, fig.dim = c(5, 5), fig.align='center'}
 mapmaker(bahamas)
 ```
 
@@ -83,8 +88,7 @@ mapmaker(bahamas, scale.width = 50, scale.lwd = 1.5,
          coast.col = 'gray50')
 ```
 
-
-Finally, additional elements can be added to the map such as towns or sampling sites using 'rscript={}' argument.The package provides example data sets ('bahamas.towns' and 'bahamas.sites'), which are used in the example below.
+Additional elements can be added to the map such as towns or sampling sites using 'rscript={}' argument.The package provides example data sets ('bahamas.towns' and 'bahamas.sites'), which are used in the example below.
 
 ```{r map customizing, echo=TRUE, fig.dim = c(6, 6), fig.align='center'}
 mapmaker(bahamas, scale.width = 50, scale.lwd = 1.5,
@@ -105,6 +109,10 @@ mapmaker(bahamas, scale.width = 50, scale.lwd = 1.5,
 ```
 <br>
 
+If the map crosses the dateline, the longitude West values are positive > 180 rather than negative (-180 - 0)
+```{r creating a map (bearing strait), echo=TRUE, fig.dim = c(5, 5), fig.align='center'}
+mapmaker(bearing.straits)
+```
 Once the map is finalized, the map can be exported by setting the pdf = TRUE.
 
 <br>

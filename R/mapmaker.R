@@ -27,39 +27,37 @@
 #'
 #' @param coords a data.frame or matrix (ncol = 3) based on a
 #' GSHHS-NOAA .bna file
-#' @param pdf logical (default = FALSE), if map is saved to an
-#' external pdf file or plotted locally
-#' @param filename character string (default = 'mymap.pdf')
-#' defining the name of the pdf output file (ignored when pdf = FALSE)
-#' @param map.height numerical value (default = 5) defining
-#' the height of the map in inches (ignored if pdf = FALSE)
-#' @param lakes logical (default = FALSE), plot inland water
-#' bodies (lakes, etc.) with a distinct color (WARNING: will
-#' slow down the function for large files)
+#' @param pdf logical, determines if map is saved to an
+#' external pdf file or plotted locally (default = FALSE)
+#' @param filename character string defining the name of the pdf
+#' file (default = 'mymap.pdf'). Ignored when pdf = FALSE)
+#' @param map.height numerical value defining the height of the map
+#' in inches (default = 5). Ignored when pdf = FALSE
 #' @param scale.bar logical (default = TRUE), determines if
-#' the scale bar is plotted
-#' @param scale.width numerical value (default = NULL),
-#' the length of the scale bar (km)
-#' @param scale.lwd numerical (default = 1.5), thickness of the
-#'  scale bar line
-#' @param scale.lat numerical (default = NULL), latitude of the
-#' scale bar (ignored if scale.long is not provided)
-#' @param scale.long numerical (default = NULL), west longitude
-#'  of the scale bar (ignored if scale.long is not provided)
-#' @param arr.north logical (default = TRUE), indicates
-#' if N arrow should be plotted
-#' @param arr.lwd numerical (default = 1.5), thickness of N arrow
-#' @param arr.cex numerical (default = 0.8), the font size
-#' of 'N' symbol of N arrow
-#' @param arr.coord numerical vector (lenght=3) (default = NULL)
-#' defining N arrow location (long, start lat, end lat)
+#' the scale bar is plotted. If scale.bar = FALSE,
+#' all scale parameters are ignored
+#' @param scale.width numerical value, the length of the scale bar
+#' in kilometers (default = NULL)
+#' @param scale.lwd numerical value, the scale bar line
+#' thickness (default = 1.5)
+#' @param scale.lat numerical value, latitude of the scale bar
+#' (default = NULL). Ignored if scale.long not provided
+#' @param scale.long numerical value, west longitude endpoint
+#' of the scale bar (default = NULL). Ignored if scale.lat not provided.
+#' @param arr.north logical, indicates if N arrow is plotted (default = TRUE).
+#' When arr.north = FALSE all arrow parameters are ignored.
+#' @param arr.lwd numerical value, thickness of N arrow (default = 1.5)
+#' @param arr.cex numerical value, the font size of 'N' symbol
+#' (default = 0.8)
+#' @param arr.coord numerical vector with three values defining
+#' N arrow location (long, start lat, end lat) (default = NULL).
+#' If not provided, N arrow is plotted in the upper right corner of the map.
 #' @param sea.col the color used for sea areas (default = 'lightskyblue1')
 #' @param coast.col the color used for coastline (default = 'khaki3')
 #' @param land.col the color used for land areas (default = 'khaki1')
-#' @param lake.col the color used for lakes (default = 'seagreen1')
-#' (ignored if lakes = FALSE)
 #' @param grayscale logical (default = FALSE), if the grayscale map
 #'  should be drawn (overrides other color definitions)
+#' @param transp numerical value for land color transparency (default = 0.5)
 #' @param rscript R script (default = NULL) with additional
 #' plot statements (e.g., mtext(), points(), etc.)
 #'
@@ -73,15 +71,14 @@
 #'
 #' @export
 
-mapmaker <- function(coords, pdf = FALSE, filename='mymap.pdf',
-                     map.height = 5, lakes = FALSE,
+mapmaker <- function(coords, pdf = FALSE, filename='mymap.pdf', map.height = 5,
                      scale.bar = TRUE, scale.width = NULL,
                      scale.lwd = 1.5, scale.lat = NULL,
                      scale.long = NULL, arr.north=TRUE,
                      arr.lwd = 1.5, arr.cex=0.8, arr.coord = NULL,
                      sea.col = 'lightskyblue1', coast.col = 'khaki3',
-                     land.col = 'khaki1', lake.col = 'seagreen1',
-                     grayscale = FALSE, rscript = NULL) {
+                     land.col = 'khaki1', grayscale = FALSE,
+                     transp = 0.5, rscript = NULL) {
 
   if (!(is.data.frame(coords) | is.matrix(coords)))
     stop('error: coords should be data.frame or matrix')
@@ -98,27 +95,6 @@ mapmaker <- function(coords, pdf = FALSE, filename='mymap.pdf',
   long.rng <- diff(range(coords[1:4, 1])) # longitude range
   lat.rng <- diff(range(coords[1:4, 2])) # latitude range
   mapdim <- long.rng / lat.rng # map dimension ratio
-
-  if (lakes) {
-    pol.rng <- NULL
-    for (i in 1:(length(plgs)-1)) {
-      ipol <- as.vector(apply(coords[(plgs[i] + 1):(plgs[i+1] - 1),], 2, range))
-      pol.rng <- rbind(pol.rng, ipol)
-    }
-    out2 <- NULL
-    for (i in 1:(length(plgs)-1)) {
-      out1 <- 0
-      apol <- colMeans(coords[(plgs[i] + 1):(plgs[i+1] - 1),])
-      for (j in 1:(length(plgs)-1)) {
-        if (j != i) {
-          longT <- apol[1] < pol.rng[j,2] & apol[1] > pol.rng[j,1]
-          latT <- apol[2] < pol.rng[j,4] & apol[2] > pol.rng[j,3]
-          if (longT & latT) out1 <- out1 + 1
-        }
-      }
-      out2 <- rbind(out2, cbind(i, out1))
-    }
-  }
 
   if (grayscale) {
     sea.col <- 'white'; coast.col <- 'gray75'; land.col <- 'gray85'
@@ -142,7 +118,7 @@ mapmaker <- function(coords, pdf = FALSE, filename='mymap.pdf',
     }
     if (length(scale.long) + length(scale.lat) < 2) {
       scale.lat <- max(coords[1:4, 2]) - 0.06 * lat.rng
-      scale.long <- max(coords[1:4, 1]) - 0.5 * lat.rng
+      scale.long <- max(coords[1:4, 1]) - 0.5 * long.rng
       bar.l <- scale.width / (111.3 * cos((pi/180) * scale.lat)) # bar length in degrees longitude
       bar.coords <- cbind(c(scale.long, scale.long + bar.l),
                           rep(scale.lat, 2)) # scale bar coordinates
@@ -169,22 +145,12 @@ mapmaker <- function(coords, pdf = FALSE, filename='mymap.pdf',
     if (i < length(plgs)) {
       a1 <- plgs[i] + 1
       a2 <- plgs[i+1] - 1
-      if (!lakes) graphics::polygon(coords[a1:a2, ],
-                                   col = land.col,
-                                   border = coast.col,
-                                   lwd=0.3)
-      if (lakes) {
-      if (out2[i,2] == 0) graphics::polygon(coords[a1:a2, ],
-                                    col = land.col,
-                                    border = coast.col,
-                                    lwd=0.3)
-      if (out2[i,2] > 0) graphics::polygon(coords[a1:a2, ],
-                                                    col = lake.col,
-                                                    border = coast.col,
-                                                    lwd=0.3)
-      }
+      graphics::polygon(coords[a1:a2, ],
+                        col = grDevices::adjustcolor(land.col, transp),
+                        border = coast.col, lwd=0.3)
     }
   }
+
   graphics::rect(coords[1,1], coords[1,2], coords[3,1], coords[2,2]) # add border
   graphics::axis(2, pos = coords[1,1], las = 1, cex.axis = 0.7,
        tck = -0.02, hadj = 0.6) # y axis
