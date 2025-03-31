@@ -41,18 +41,16 @@ file (default = 'mymap.pdf'). Ignored when pdf = FALSE)}
 in inches (default = 5). Ignored when pdf = FALSE}
 
 \item{custom.dim}{vector with two values defining map
-dimensions (width and height) (default = NULL). If custom.dim
-is provided, the map aspect ratio will be distorted.}
+dimensions in inches (width and height) (default = NULL).}
 
-\item{scale.bar}{logical (default = TRUE), determines if
-the scale bar is plotted. If scale.bar = FALSE,
-all scale parameters are ignored}
+\item{scale.bar}{logical, determines if the scale bar is plotted
+(default = TRUE). If scale.bar = FALSE, other scale parameters are ignored}
 
 \item{scale.width}{numerical value, the length of the scale bar
 in kilometers (default = NULL)}
 
 \item{scale.lwd}{numerical value, the scale bar line
-thickness (default = 1.5)}
+width (default = 1.5)}
 
 \item{scale.lat}{numerical value, latitude of the scale bar
 (default = NULL). Ignored if scale.long not provided}
@@ -118,5 +116,11 @@ The scaling is not applied When the map is previewed in R plot window
 }
 \examples{
 mapmaker(bahamas)
+mapmaker(bahamas, grayscale = TRUE, rscript = {
+points(bahamas.towns[, 2:3], pch = 24, cex = 0.6, col = 'black', bg = 'blue')
+text(bahamas.towns[, 2:3], cex = 0.5, col = 'blue', bahamas.towns[,1], pos = 2, offset=0.15)
+points(bahamas.sites[, 2:3], pch = 21, cex = 1.3, col = 'black', bg = 'white')
+text(bahamas.sites[, 2:3], cex = 0.4, col = 'black', bahamas.sites[,1])
+})
 
 }

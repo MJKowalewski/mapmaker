@@ -30,11 +30,11 @@ Once downloaded from the NOAA website, the .bna file needs to be uploaded into a
 
 <br>
 
-object <- read.delim('filename.bna', sep=',', header=TRUE)
+object <- read.delim(`'filename.bna'`, sep=`','`, header=TRUE)
 
 <br>
 
-An example data (Bahamas) is included in the package. It is a data.frame created from a GSHHS-NOAA .bna file.
+Three example data sets (bahamas, adriatic, bearing.straits) are included in the package. All three are dataframes created from GSHHS-NOAA .bna files.
 
 ### Package Installation
 
@@ -42,11 +42,11 @@ The package mapmaker can be installed from github using devtools.
 
 <br>
 
-devtools::install_github(`"`mjkowalewski/mapmaker`"`, build_vignettes = TRUE)
+devtools::install_github(`"mjkowalewski/mapmaker"`, build_vignettes = TRUE)
 
 <br>
 
-Once installed, the library can be uploaded.
+Once installed, upload the library.
 
 ```{r setup}
 library(mapmaker)
@@ -54,33 +54,38 @@ library(mapmaker)
 
 ### mapmaker function
 
-The function *mapmaker* is designed to either draw a map locally in the R/R Studio plot window (default) or export an external pdf file (when argument pdf = TRUE). The default setting is pdf = FALSE because it is advisable to preview a map before producing the final output. The plot is for preview purpose only because the map aspect ratio will not be correct, but will reflect the plot window dimensions and the longitudinal and latitudinal ranges of the map. When the pdf = TRUE, the exported pdf file will have the correct map aspect ratio. 
+The function *mapmaker* is designed to either draw a map locally in the R/R Studio plot window (pdf = FALSE) or export an external pdf file (pdf = TRUE). The default setting is pdf = FALSE because, in most cases, a map needs to be previewed and adjusted before generating the final pdf output. The plot is for preview purposes and the map aspect ratio will not be correct, but reflects the plot window dimensions and the longitudinal and latitudinal ranges of the map. The exported pdf file will have dimensions with map aspect ratio based on the mid-point latitude of the map. In its default form, the map will include North Arrow (plotted in the upper right corner of the map) and the scale bar (plotted in the top center part of the map). Both, the arrow and the scale bar can be suppressed or modified using arrow and scale arguments included in the function. Also, custom dimensions can be defined to customize figure dimensions, although using this argument will usually result in producing a map with incorrect aspect ratios.
 
-To explore the function, the example dataset "bahamas" will be used here. 
+The example datasets included in the package are dataframes with three columns. All have the same format exemplified here using data 'bahamas'. 
 
 ```{r example data}
 str(bahamas)
 head(bahamas)
 ```
 
-Here is an example of a map produced by the function for the dataset "adriatic" using the function's default settings.The pdf version of this figure offers much higher quality and resolution than the figure in the html version rendered here.  
+Below is an example of a map drawn for the dataset 'adriatic' using default version of the function 'mapmaker'. Note that the resolution of the html version of the map is relatively low. The pdf version of this figure generated in R should offer a much higher quality and resolution.
+
 ```{r creating a map (adriatic), echo=TRUE, fig.dim = c(5, 5), fig.align='center'}
 mapmaker(adriatic)
 ```
 
-Here is an example of a map produced by the function for the dataset "bahamas" using the function's default settings.The pdf version of this figure offers much higher quality and resolution than the figure in the html version rendered here.  
+A map also can be drawn using grayscale by setting the argument grayscale = TRUE (default: grayscale = FALSE) or by customizing color arguments using grayscale color definitions.
 
 ```{r creating a map (bahamas), echo=TRUE, fig.dim = c(5, 5), fig.align='center'}
-mapmaker(bahamas)
+mapmaker(bahamas, grayscale = TRUE)
 ```
 
-The map can be customized by changing colors and modifying the placement and attributes of the scale bar and the north arrow. Both, the scale bar and the north arrow can be suppressed. See help menu ?mapmaker for details about all currently available arguments.
+Note that if the map includes the dateline, the longitude West values are positive > 180 rather than negative (-180 - 0), as illustrated here for Bearing Strait.
+
+```{r creating a map (bearing strait), echo=TRUE, fig.dim = c(5, 5), fig.align='center'}
+mapmaker(bearing.straits)
+```
+
+The map can also be customized by changing colors of land, sea, and coastline,  modifying the arguments for the scale bar and the north arrow (see help menu (`?mapmaker`) for details about all currently available arguments). Here is an example, using 'bahamas' dataset.
 
 <br>
 
-Here is an example of a customized map for the Bahamas dataset.
-
-```{r a map with arguments, echo=TRUE, fig.dim = c(6, 6), fig.align='center'}
+```{r a map with arguments, echo=TRUE, fig.dim = c(5, 5), fig.align='center'}
 mapmaker(bahamas, scale.width = 50, scale.lwd = 1.5,
          scale.lat=27, scale.long=-76, arr.lwd = 1.5,
          arr.cex = 1.1, arr.coord = c(-73, 26.5, 27.5),
@@ -90,7 +95,7 @@ mapmaker(bahamas, scale.width = 50, scale.lwd = 1.5,
 
 Additional elements can be added to the map such as towns or sampling sites using 'rscript={}' argument.The package provides example data sets ('bahamas.towns' and 'bahamas.sites'), which are used in the example below.
 
-```{r map customizing, echo=TRUE, fig.dim = c(6, 6), fig.align='center'}
+```{r map customizing, echo=TRUE, fig.dim = c(5, 5), fig.align='center'}
 mapmaker(bahamas, scale.width = 50, scale.lwd = 1.5,
          scale.lat=27, scale.long=-76, arr.lwd = 1.5, 
          arr.cex = 0.8, arr.coord = c(-73, 26.5, 27.5), 
@@ -110,17 +115,9 @@ mapmaker(bahamas, scale.width = 50, scale.lwd = 1.5,
 ```
 <br>
 
-If the map crosses the dateline, the longitude West values are positive > 180 rather than negative (-180 - 0).
-
-```{r creating a map (bearing strait), echo=TRUE, fig.dim = c(5, 5), fig.align='center'}
-mapmaker(bearing.straits)
-```
-
-Also, custom dimensions can be defined to customize map aspect ratio (e.g., mapmaker(bearing.straits, pdf = TRUE, custom.dim = c(6,5)).
-
 <br>
 
-Once the map is finalized, the map can be exported by setting the pdf = TRUE.
+Once the map is finalized, the map can be exported by setting the argument pdf = TRUE.
 
 <br>
 
