@@ -1,6 +1,6 @@
 Package: mapmaker
 Type: Package
-Title: Map Plotter for Coastlines
+Title: Create maps using GSHHS-NOAA data files
 Version: 0.1.0
 Depends: R (>= 4.0.0)
 Authors@R: c(
@@ -10,7 +10,7 @@ Authors@R: c(
       role = c("aut", "cre")
     )
   )
-Description: Creates maps using GSHHS-NOAA data.
+Description: Create maps using GSHHS-NOAA coastline data. User provides a data.frame based on a '.bna' data file downloaded from NOAA. Maps can be optionally customized by adding additional plotting statements.
 License: CC0
 Encoding: UTF-8
 LazyData: true
