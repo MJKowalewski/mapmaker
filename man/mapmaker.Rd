@@ -6,19 +6,24 @@
 \usage{
 mapmaker(
   coords,
-  pdf = FALSE,
-  filename = "mymap.pdf",
-  map.height = 5,
-  custom.dim = NULL,
   scale.bar = TRUE,
   scale.width = NULL,
   scale.lwd = 1.5,
+  scale.cex = 0.7,
   scale.lat = NULL,
   scale.long = NULL,
   arr.north = TRUE,
   arr.lwd = 1.5,
-  arr.cex = 0.8,
+  arr.cex = 0.7,
   arr.coord = NULL,
+  cex.lab = 0.8,
+  axes.lab = TRUE,
+  xcex = 0.7,
+  xtck = -0.02,
+  xadj = 0.6,
+  ycex = 0.7,
+  ytck = -0.02,
+  yadj = -1.5,
   sea.col = "lightskyblue1",
   coast.col = "khaki3",
   land.col = "khaki1",
@@ -31,18 +36,6 @@ mapmaker(
 \item{coords}{a data.frame or matrix (ncol = 3) based on a
 GSHHS-NOAA .bna file}
 
-\item{pdf}{logical, determines if map is saved to an
-external pdf file or plotted locally (default = FALSE)}
-
-\item{filename}{character string defining the name of the pdf
-file (default = 'mymap.pdf'). Ignored when pdf = FALSE)}
-
-\item{map.height}{numerical value defining the height of the map
-in inches (default = 5). Ignored when pdf = FALSE}
-
-\item{custom.dim}{vector with two values defining map
-dimensions in inches (width and height) (default = NULL).}
-
 \item{scale.bar}{logical, determines if the scale bar is plotted
 (default = TRUE). If scale.bar = FALSE, other scale parameters are ignored}
 
@@ -51,6 +44,9 @@ in kilometers (default = NULL)}
 
 \item{scale.lwd}{numerical value, the scale bar line
 width (default = 1.5)}
+
+\item{scale.cex}{numerical value, the font size of
+scale label (default = 0.7)}
 
 \item{scale.lat}{numerical value, latitude of the scale bar
 (default = NULL). Ignored if scale.long not provided}
@@ -64,11 +60,27 @@ When arr.north = FALSE all arrow parameters are ignored.}
 \item{arr.lwd}{numerical value, thickness of N arrow (default = 1.5)}
 
 \item{arr.cex}{numerical value, the font size of 'N' symbol
-(default = 0.8)}
+(default = 0.7)}
 
 \item{arr.coord}{numerical vector with three values defining
-N arrow location (long, start lat, end lat) (default = NULL).
+N arrow location (long, start lat, end lat) (default = NULL)
 If not provided, N arrow is plotted in the upper right corner of the map.}
+
+\item{cex.lab}{numerical value for scaling size of axis labels (default = 0.8)}
+
+\item{axes.lab}{logical, whether the axes labels should be plotted (default = TRUE)}
+
+\item{xcex}{numerical value for x-axis labels (default = 0.7)}
+
+\item{xtck}{numerical value for x-axis ticks (default = -0.02)}
+
+\item{xadj}{numerical value for x-axis adjustment (default = 0.6)}
+
+\item{ycex}{numerical value for x-axis labels (default = 0.7)}
+
+\item{ytck}{numerical value for x-axis ticks (default = -0.02)}
+
+\item{yadj}{numerical value for x-axis adjustment (default = -1.5)}
 
 \item{sea.col}{the color used for sea areas (default = 'lightskyblue1')}
 
@@ -85,7 +97,7 @@ should be drawn (overrides other color definitions)}
 plot statements (e.g., mtext(), points(), etc.)}
 }
 \value{
-either a plot (pdf = FALSE) or a pdf file (pdf = TRUE)
+a single plot
 }
 \description{
 Draw Maps using GSHHS-NOAA Data
@@ -100,23 +112,21 @@ shoreline coordinates defined as hierarchically arranged closed polygons.
 Data need to be uploaded into an R data.frame to create an object
 acceptable by the mapmaker function.
 
-
+One way to do it is to use read.delim:
 object <- read.delim('filename.bna', sep=',', header=TRUE)
-
 
 The resolution of a map drawn by mapmaker will depend on
 the resolution chosen when downloading the .bna file from NOAA website.
 For maps crossing the dateline longitude west values are > 180.
 The map is always produced in the northward orientation.
-The function computes map aspect ratio based on the mid-point
-latitude of a given map. The aspect ratio only applies to pdf-formatted
-figures produced by mapmaker function when argument pdf = TRUE.
-The scaling is not applied When the map is previewed in R plot window
-(pdf = FALSE).
 }
 \examples{
-mapmaker(bahamas)
-mapmaker(bahamas, grayscale = TRUE, rscript = {
+mapmaker(bahamas) # draws a map with arbitrary dimensions
+
+map.dim <- mapratio(coords = bahamas, map.width = 4)
+map.dim # find correct map dimensions
+par(pin=map.dim)
+mapmaker(coords = bahamas, grayscale = TRUE, rscript = {
 points(bahamas.towns[, 2:3], pch = 24, cex = 0.6, col = 'black', bg = 'blue')
 text(bahamas.towns[, 2:3], cex = 0.5, col = 'blue', bahamas.towns[,1], pos = 2, offset=0.15)
 points(bahamas.sites[, 2:3], pch = 21, cex = 1.3, col = 'black', bg = 'white')

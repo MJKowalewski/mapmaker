@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ### Introduction
 
-The package mapmaker includes a single function ('mapmaker') designed to draw maps based on GSHHS-NOAA coastline data.
+The package mapmaker is designed to draw maps based on GSHHS-NOAA coastline data.
 
 ### Required Data and Data Example
 
@@ -26,7 +26,7 @@ GSHHS-NOAA data can be downloaded at https://gnome.orr.noaa.gov/goods/tools/GSHH
 
 <br>
 
-Once downloaded from the NOAA website, the .bna file needs to be uploaded into a data.frame that can be used by the mapmaker function. This can be done as follows.
+Once downloaded from the NOAA website, the .bna file needs to be uploaded into a data.frame that can be used by the mapmaker function. This can be done as follows:
 
 <br>
 
@@ -52,32 +52,52 @@ Once installed, upload the library.
 library(mapmaker)
 ```
 
-### mapmaker function
+### mapratio function
 
-The function *mapmaker* is designed to either draw a map locally in the R/R Studio plot window (pdf = FALSE) or export an external pdf file (pdf = TRUE). The default setting is pdf = FALSE because, in most cases, a map needs to be previewed and adjusted before generating the final pdf output. The plot is for preview purposes and the map aspect ratio will not be correct, but reflects the plot window dimensions and the longitudinal and latitudinal ranges of the map. The exported pdf file will have dimensions with map aspect ratio based on the mid-point latitude of the map. In its default form, the map will include North Arrow (plotted in the upper right corner of the map) and the scale bar (plotted in the top center part of the map). Both, the arrow and the scale bar can be suppressed or modified using arrow and scale arguments included in the function. Also, custom dimensions can be defined to customize figure dimensions, although using this argument will usually result in producing a map with incorrect aspect ratios.
+The function computes the width and height of the map with the corrected aspect ratio. The dimensions are corrected for differences in ranges of latitudes and longitudes and for longitude/latitude ratio at a given latitude using mid-point latitude of the map. Note that longitude/latitude is 1 at the equator and <1 at higher latitudes.
 
-The example datasets included in the package are dataframes with three columns. All have the same format exemplified here using data 'bahamas'. 
+<br>
+
+The function returns a vector with two numerical values, representing width and height of map in inches. In its default form, width = 3 inches and height value is computed by the function. If height is defined using argument map.height, the width is computed by the function instead. For example:
+
+```{r mapratio output examples}
+mapratio(bahamas) # dimensions for a map width of 3 inches (default)
+mapratio(bahamas, map.width = 4) # dimensions for map width of 4 inches
+mapratio(bahamas, map.height = 2.5) # dimensions for map with height of 2.5 inches
+```
+
+### mapmaker function 
+
+The function *mapmaker* draws a single plot (map). In its default form, the map will include North Arrow (plotted in the upper right corner of the map) and the scale bar (plotted in the top center part of the map). Both, the arrow and the scale bar can be suppressed or modified using arrow and scale arguments.
+
+The object coords (required) should be a data frame with three columns derived from a .bna file. All example datasets included in the package conform to this format, illustrated here using data 'bahamas'. The first four rows define map boundaries and are used by *mapratio* to compute map dimensions and *mapmaker* to draw a map.
 
 ```{r example data}
 str(bahamas)
 head(bahamas)
 ```
 
-Below is an example of a map drawn for the dataset 'adriatic' using default version of the function 'mapmaker'. Note that the resolution of the html version of the map is relatively low. The pdf version of this figure generated in R should offer a much higher quality and resolution.
+Below are examples of maps drawn using example datasets. Note that mapratio function is implemented first to obtain map dimensions, which are then used to controlmap dimensions (e.g., using argument *pin* in *par* function). The resolution of the example maps included in this vignette is necessarily low, but figures with much higher (publication quality) maps can be produced in R.
 
-```{r creating a map (adriatic), echo=TRUE, fig.dim = c(5, 5), fig.align='center'}
+```{r creating a map (adriatic), echo=TRUE, fig.dim = c(5, 5), fig.align='center', dpi = 150}
+adriatic.dim <- mapratio(adriatic)
+par(pin = adriatic.dim)
 mapmaker(adriatic)
 ```
 
 A map also can be drawn using grayscale by setting the argument grayscale = TRUE (default: grayscale = FALSE) or by customizing color arguments using grayscale color definitions.
 
-```{r creating a map (bahamas), echo=TRUE, fig.dim = c(5, 5), fig.align='center'}
+```{r creating a map (bahamas), echo=TRUE, fig.dim = c(5, 5), fig.align='center', dpi = 150}
+bahamas.dim <- mapratio(bahamas)
+par(pin = bahamas.dim)
 mapmaker(bahamas, grayscale = TRUE)
 ```
 
-Note that if the map includes the dateline, the longitude West values are positive > 180 rather than negative (-180 - 0), as illustrated here for Bearing Strait.
+Note that if the map includes the dateline, the longitude West values are positive > 180 rather than negative (-180 - 0), as illustrated here for the Bearing Strait map.
 
-```{r creating a map (bearing strait), echo=TRUE, fig.dim = c(5, 5), fig.align='center'}
+```{r creating a map (bearing strait), echo=TRUE, fig.dim = c(5, 5), fig.align='center', dpi=150}
+bstraits.dim <- mapratio(bearing.straits)
+par(pin = bstraits.dim)
 mapmaker(bearing.straits)
 ```
 
@@ -85,7 +105,9 @@ The map can also be customized by changing colors of land, sea, and coastline,  
 
 <br>
 
-```{r a map with arguments, echo=TRUE, fig.dim = c(5, 5), fig.align='center'}
+```{r a map with arguments, echo=TRUE, fig.dim = c(5, 5), fig.align='center', dpi = 150}
+bahamas.dim <- mapratio(bahamas)
+par(pin = bahamas.dim)
 mapmaker(bahamas, scale.width = 50, scale.lwd = 1.5,
          scale.lat=27, scale.long=-76, arr.lwd = 1.5,
          arr.cex = 1.1, arr.coord = c(-73, 26.5, 27.5),
@@ -95,7 +117,9 @@ mapmaker(bahamas, scale.width = 50, scale.lwd = 1.5,
 
 Additional elements can be added to the map such as towns or sampling sites using 'rscript={}' argument.The package provides example data sets ('bahamas.towns' and 'bahamas.sites'), which are used in the example below.
 
-```{r map customizing, echo=TRUE, fig.dim = c(5, 5), fig.align='center'}
+```{r map customizing, echo=TRUE, fig.dim = c(5, 5), fig.align='center', dpi = 150}
+bahamas.dim <- mapratio(bahamas)
+par(pin = bahamas.dim)
 mapmaker(bahamas, scale.width = 50, scale.lwd = 1.5,
          scale.lat=27, scale.long=-76, arr.lwd = 1.5, 
          arr.cex = 0.8, arr.coord = c(-73, 26.5, 27.5), 
@@ -113,11 +137,6 @@ mapmaker(bahamas, scale.width = 50, scale.lwd = 1.5,
                 bahamas.sites[,1])
 })
 ```
-<br>
-
-<br>
-
-Once the map is finalized, the map can be exported by setting the argument pdf = TRUE.
 
 <br>
 
@@ -129,10 +148,8 @@ Once the map is finalized, the map can be exported by setting the argument pdf =
   
   * The map is always produced in the northward orientation.
   
-  * The function computes map aspect ratio based on the mid-point latitude of a given map. The aspect ratio only applies to pdf-formatted figures produced by mapmaker function when argument pdf = TRUE.
+  * The *mapratio* function computes map aspect ratio based on the mid-point latitude of a given map.
   
-  * The scaling is not applied when the map is previewed in R plot window (pdf = FALSE).
-
 <br>
 
 **Comments? Question?** Michal Kowalewski (University of Florida) kowalewski@ufl.edu
